@@ -1,0 +1,5 @@
+numpy
+matplotlib
+qiskit
+galois
+tqdm
