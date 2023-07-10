@@ -6,7 +6,7 @@ import random
 
 import galois
 import numpy as np
-# from matplotlib import pyplot as plt
+
 GF = galois.GF(2)
 
 # %%
@@ -53,7 +53,7 @@ style = {
 # %%
 simulator = Aer.get_backend('aer_simulator_stabilizer')
 circ = transpile(circ, simulator)
-result = simulator.run(circ, shots = 1).result() # 4 minutes per shot on 512 qubits, T = 150
+result = simulator.run(circ, shots = 10).result() # 4 minutes per shot on 512 qubits, T = 150
 
 # %%
 def B(G):
@@ -111,12 +111,7 @@ def entropy(stab_state, A):
 stabs = result.data()['t299']
 
 # %%
-S = [entropy(stab_state, 256) for stab_state in stabs]
+S = np.array([entropy(stab_state, 256) for stab_state in stabs])
 
 # %%
-plt.hist(S)
-
-# %%
-
-
-
+np.savetxt("test_out", S)
