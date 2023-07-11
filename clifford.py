@@ -33,7 +33,7 @@ def make(n_qubits, T, p, save_intermediate = False):
                 circ.measure(qr[i], cr[i])
         
         if save_intermediate:
-            circ.save_state(pershot = True, label = "t"+str(2*t))
+            circ.save_clifford(pershot = True, label = "t"+str(2*t))
 
         # Layer 2
         for j in range((n_qubits - 1) // 2):
@@ -48,11 +48,11 @@ def make(n_qubits, T, p, save_intermediate = False):
                 circ.measure(qr[j], cr[j])
 
         if save_intermediate:
-            circ.save_state(pershot = True, label = "t"+str(2*t+1))
+            circ.save_clifford(pershot = True, label = "t"+str(2*t+1))
 
     # Save final state
     if not save_intermediate:
-        circ.save_state(pershot = True, label = "t"+str(2*T-1))
+        circ.save_clifford(pershot = True, label = "t"+str(2*T-1))
     return circ
 
 def draw(circ):
@@ -104,19 +104,18 @@ def B(G, n_qubits):
         rv.append((l, r))
     return np.array(rv)
 
-def entropy(stab_state, A, n_qubits):
+def entropy(cliff, A, n_qubits):
     """Compute the entanglement entropy of a subsystem of a stabilizer state.
 
     Args:
-        stab_state (StabilizerState): a stabilizer state
+        cliff (numpy.ndarray): a Clifford matrix X|Z of shape (n_qubits, 2 * n_qubits + 1)
         A (int): number of qubits in the subsystem of interest
         n_qubits (int): number of qubits in the full system
 
     Returns:
         The entanglement entropy of the subsystem.
     """
-    cliff = stab_state.clifford
-    tableau = GF(cliff.stab.astype(int))[:, :-1] # Discard parity bit
+    tableau = GF(cliff)[:, :-1] # Discard parity bit
     # Convert from X|Z to xz...xz, and standard order of qubits
     stab = np.empty_like(tableau)
     stab[:, 0::2] = tableau[:, n_qubits-1::-1]
@@ -124,22 +123,22 @@ def entropy(stab_state, A, n_qubits):
 
     return np.linalg.matrix_rank(stab[:,:2*A]) - A
 
-def clipped_gauge(stab_state, n_qubits):
+def clipped_gauge(cliff, n_qubits):
     """Compute the clipped gauge of a stabilizer state.
 
     Args:
-        stab_state (StabilizerState): a stabilizer state
+        cliff (numpy.ndarray): a Clifford matrix X|Z of shape (n_qubits, 2 * n_qubits + 1)
         n_qubits (int): number of qubits in the full system
     
     Returns:
         A galois.FieldArray of shape (n_qubits, 2 * n_qubits) containing the stabilizer tableau in the clipped gauge.
     """
-    cliff = stab_state.clifford
-    tableau = GF(cliff.stab.astype(int))[:, :-1]
-    # Convert from X|Z to xz...xz, and convert to standard order
+    tableau = GF(cliff)[:, :-1] # Discard parity bit
+    # Convert from X|Z to xz...xz, and standard order of qubits
     stab = np.empty_like(tableau)
     stab[:, 0::2] = tableau[:, n_qubits-1::-1]
     stab[:, 1::2] = tableau[:, :n_qubits-1:-1]
+
     # Pregauge transformation
     stab = stab.row_reduce()
     # Gauge transformation (TODO)
