@@ -1,5 +1,5 @@
-from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
-from qiskit import Aer, transpile
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, transpile
+from qiskit.providers.aer import Aer
 from qiskit.quantum_info import random_clifford
 import random
 
@@ -85,7 +85,13 @@ def run(circ, shots = 1):
 
 def B(G, n_qubits):
     """Compute bigrams of a stabilizer tableau.
+
+    Args:
+        G (galois.FieldArray): a stabilizer tableau xz...xz of shape (n_qubits, 2 * n_qubits)
+        n_qubits (int): number of qubits
     
+    Returns:
+        A numpy.ndarray of shape (n_qubits, 2) containing the bigrams.
     """
     rv = []
     for i in range(n_qubits): # loop through rows
@@ -98,7 +104,36 @@ def B(G, n_qubits):
         rv.append((l, r))
     return np.array(rv)
 
+def entropy(stab_state, A, n_qubits):
+    """Compute the entanglement entropy of a subsystem of a stabilizer state.
+
+    Args:
+        stab_state (StabilizerState): a stabilizer state
+        A (int): number of qubits in the subsystem of interest
+        n_qubits (int): number of qubits in the full system
+
+    Returns:
+        The entanglement entropy of the subsystem.
+    """
+    cliff = stab_state.clifford
+    tableau = GF(cliff.stab.astype(int))[:, :-1] # Discard parity bit
+    # Convert from X|Z to xz...xz, and standard order of qubits
+    stab = np.empty_like(tableau)
+    stab[:, 0::2] = tableau[:, n_qubits-1::-1]
+    stab[:, 1::2] = tableau[:, :n_qubits-1:-1]
+
+    return np.linalg.matrix_rank(stab[:,:2*A]) - A
+
 def clipped_gauge(stab_state, n_qubits):
+    """Compute the clipped gauge of a stabilizer state.
+
+    Args:
+        stab_state (StabilizerState): a stabilizer state
+        n_qubits (int): number of qubits in the full system
+    
+    Returns:
+        A galois.FieldArray of shape (n_qubits, 2 * n_qubits) containing the stabilizer tableau in the clipped gauge.
+    """
     cliff = stab_state.clifford
     tableau = GF(cliff.stab.astype(int))[:, :-1]
     # Convert from X|Z to xz...xz, and convert to standard order
@@ -124,13 +159,3 @@ def clipped_gauge(stab_state, n_qubits):
                 if i != len(rows) - 1:
                     rev[rows[i+1:],:] += rev[row,:]
     return rev[::-1, ::-1]
-
-def entropy(stab_state, A, n_qubits):
-    cliff = stab_state.clifford
-    tableau = GF(cliff.stab.astype(int))[:, :-1]
-    # Convert from X|Z to xz...xz, and standard order of qubits
-    stab = np.empty_like(tableau)
-    stab[:, 0::2] = tableau[:, n_qubits-1::-1]
-    stab[:, 1::2] = tableau[:, :n_qubits-1:-1]
-
-    return np.linalg.matrix_rank(stab[:,:2*A]) - A
