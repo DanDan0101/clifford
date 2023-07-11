@@ -8,4 +8,4 @@
 #SBATCH --mem=8GB
 #SBATCH --mail-type=ALL
 
-python -u test.py -n 512 -T 150 -p 0.06 -s 40
+python3 -u test.py -n 512 -T 150 -p 0.06 -s 40
