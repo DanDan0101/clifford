@@ -7,7 +7,4 @@
 #SBATCH -c 1
 #SBATCH --mem=8GB
 
-ml py-numpy/1.24.2_py39
-ml viz
-
-python3 test.py
+python test.py
