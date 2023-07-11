@@ -6,5 +6,6 @@
 #SBATCH -p normal
 #SBATCH -c 1
 #SBATCH --mem=8GB
+#SBATCH --mail-type=ALL
 
-python test.py -n 512 -T 150 -p 0.06 -s 40
+python -u test.py -n 512 -T 150 -p 0.06 -s 40
