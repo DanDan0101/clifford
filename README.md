@@ -4,6 +4,7 @@
 * `-T`, default 150
 * `-p`, default 0.06
 * `-s`, `--shots`, default 1
+Output file is `S_n_T_p_s.out`.
 ## Requirements
 * `qiskit[visualization]`
 * `galois`
