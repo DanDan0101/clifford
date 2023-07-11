@@ -25,7 +25,7 @@ print("Generating and simulating circuits:")
 for _ in tqdm(range(shots)):
     circ = make(n_qubits, T, p, save_intermediate = False)
     # draw(circ)
-    result = run(circ, shots = 1)
+    result = run(circ)
     stabs.append(result.data()['t'+str(2*T-1)][0]) # Append the final state
 
 print("Calculating entropies:")
