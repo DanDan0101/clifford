@@ -29,7 +29,7 @@ for _ in tqdm(range(shots)):
     cliffords.append(result.data()['t'+str(2*T-1)][0].stab.astype(int)) # Append the final state stabilizer matrix
 
 print("Calculating entropies:")
-S = [entropy(cliff, n_qubits // 2, n_qubits) for cliff in tqdm(cliffords)]
+S = [entropy(cliff, n_qubits // 2) for cliff in tqdm(cliffords)]
 np.savetxt("S_{}_{}_{}_{}.out".format(n_qubits, T, p, shots), S)
 
 plt.hist(S)

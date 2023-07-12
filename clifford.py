@@ -83,7 +83,7 @@ def run(circ, shots = 1):
     result = simulator.run(circ, shots = shots).result()
     return result
 
-def B(G, n_qubits):
+def B(G):
     """Compute bigrams of a stabilizer tableau.
 
     Args:
@@ -93,6 +93,7 @@ def B(G, n_qubits):
     Returns:
         A numpy.ndarray of shape (n_qubits, 2) containing the bigrams.
     """
+    n_qubits = G.shape[0]
     rv = []
     for i in range(n_qubits): # loop through rows
         l = np.inf
@@ -104,18 +105,48 @@ def B(G, n_qubits):
         rv.append((l, r))
     return np.array(rv)
 
-def entropy(cliff, A, n_qubits):
+def counts_B(bigrams):
+    """Dev tool to count the number of occurrences of each endpoint.
+    
+    Args:
+        bigrams (numpy.ndarray): a matrix of shape (n_qubits, 2) containing the bigrams.
+    
+    Returns:
+        A numpy.ndarray of shape (n_qubits, 2) containing rho_l, rho_r, and rho.
+    """
+    n_qubits = bigrams.shape[0]
+    rho_l = np.zeros(n_qubits, dtype = int)
+    rho_r = np.zeros(n_qubits, dtype = int)
+    for i in range(n_qubits):
+        rho_l[i] = np.count_nonzero(bigrams[:, 0] == i)
+        rho_r[i] = np.count_nonzero(bigrams[:, 1] == i)
+    rho = rho_l + rho_r
+    return np.stack((rho_l, rho_r, rho), axis = 1)
+
+def entropy_B(bigrams, A):
+    """Compute the entanglement entropy of a subsystem of a stabilizer state, given clipped-gauge bigrams.
+    
+    Args:
+        bigrams (numpy.ndarray): a matrix of shape (n_qubits, 2) containing the bigrams in the clipped gauge.
+        A (int): number of qubits in the subsystem of interest
+    
+    Returns:
+        The entanglement entropy of the subsystem.
+    """
+    return np.count_nonzero(np.logical_and(bigrams[:, 0] < A, bigrams[:, 1] >= A)) / 2
+
+def entropy(cliff, A):
     """Compute the entanglement entropy of a subsystem of a stabilizer state.
 
     Args:
         cliff (numpy.ndarray): a Clifford matrix X|Z of shape (n_qubits, 2 * n_qubits + 1)
         A (int): number of qubits in the subsystem of interest
-        n_qubits (int): number of qubits in the full system
 
     Returns:
         The entanglement entropy of the subsystem.
     """
     tableau = GF(cliff)[:, :-1] # Discard parity bit
+    n_qubits = tableau.shape[0]
     # Convert from X|Z to xz...xz, and standard order of qubits
     stab = np.empty_like(tableau)
     stab[:, 0::2] = tableau[:, n_qubits-1::-1]
@@ -123,17 +154,17 @@ def entropy(cliff, A, n_qubits):
 
     return np.linalg.matrix_rank(stab[:,:2*A]) - A
 
-def clipped_gauge(cliff, n_qubits):
-    """Compute the clipped gauge of a stabilizer state.
+def clipped_gauge(cliff):
+    """(TODO) Compute the clipped gauge of a stabilizer state.
 
     Args:
         cliff (numpy.ndarray): a Clifford matrix X|Z of shape (n_qubits, 2 * n_qubits + 1)
-        n_qubits (int): number of qubits in the full system
     
     Returns:
         A galois.FieldArray of shape (n_qubits, 2 * n_qubits) containing the stabilizer tableau in the clipped gauge.
     """
     tableau = GF(cliff)[:, :-1] # Discard parity bit
+    n_qubits = tableau.shape[0]
     # Convert from X|Z to xz...xz, and standard order of qubits
     stab = np.empty_like(tableau)
     stab[:, 0::2] = tableau[:, n_qubits-1::-1]
