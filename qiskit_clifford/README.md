@@ -1,6 +1,13 @@
-# clifford
+# qiskit_clifford
+`test.py` takes the following command line arguments:
+* `-n`, `--n_qubits`, default 512
+* `-T`, default 150
+* `-p`, default 0.06
+* `-s`, `--shots`, default 1
+Output file is `S_n_T_p_s.out`.
 ## Requirements
-* [`torchclifford`](https://github.com/hongyehu/PyClifford)
+* `qiskit[visualization]`
+* `galois`
 * `numpy`
 * `matplotlib`
 * `tqdm`

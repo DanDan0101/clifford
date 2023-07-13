@@ -8,4 +8,4 @@
 #SBATCH --mem=4GB
 #SBATCH --mail-type=ALL
 
-python3 -u test.py -n 512 -T 150 -p 0.06 -s 100
+python3 -u qiskit_test.py -n 512 -T 150 -p 0.06 -s 100

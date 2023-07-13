@@ -1,5 +1,5 @@
-from clifford import make, draw, run
-from clifford import B, clipped_gauge, entropy
+from qiskit_clifford import make, draw, run
+from qiskit_clifford import B, clipped_gauge, entropy
 import numpy as np
 from matplotlib import pyplot as plt
 from tqdm import tqdm
