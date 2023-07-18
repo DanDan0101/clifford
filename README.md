@@ -1,6 +1,6 @@
 # clifford
 ## Requirements
-* [`torchclifford`](https://github.com/hongyehu/PyClifford)
+* [`pyclifford`](https://github.com/hongyehu/PyClifford)
 * `numpy`
 * `matplotlib`
 * `tqdm`
