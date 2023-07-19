@@ -1,8 +1,17 @@
 # clifford
+`entropy_time.py` and `entropy_hist.py` take the following command line arguments:
+* `-n`, `--n_qubits`, default 512
+* `-T`, default 256
+* `-s`, `--shots`, default 10
+Output file is `n_T_s_*.pkl`.
 ## Requirements
+NB: PyClifford will not run on Windows. Use a UNIX-based OS instead.
 * [`pyclifford`](https://github.com/hongyehu/PyClifford)
+* `numba`
 * `numpy`
+* `scipy`
 * `matplotlib`
+* `seaborn`
 * `tqdm`
 ## References
 * [Measurement-driven entanglement transition in hybrid quantum circuits](https://doi.org/10.1103/PhysRevB.100.134306)
