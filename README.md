@@ -3,7 +3,8 @@
 * `-n`, `--n_qubits`, default 512
 * `-T`, default 256
 * `-s`, `--shots`, default 10
-Output file is `n_T_s_*.pkl`.
+* `-p`, default 0.1
+Output file is `n_T_s_p_*.npy`, where `*` is either `zero`, `me`, or `hist`.
 ## Requirements
 NB: PyClifford will not run on Windows. Use a UNIX-based OS instead.
 * [`pyclifford`](https://github.com/hongyehu/PyClifford)

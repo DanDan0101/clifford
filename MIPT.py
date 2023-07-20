@@ -134,9 +134,9 @@ def evolve_entropies(state, depth, p, shots = 10, logging = True):
         np.ndarray: An array of shape (2, depth + 1) containing the mean and std of the bipartite entanglement entropies.
     """
     if logging:
-        entropies_raw = np.array([evolve_entropy(state, depth, p) for _ in tqdm(range(shots))])
+        entropies_raw = np.array([evolve_entropy(state.copy(), depth, p) for _ in tqdm(range(shots))])
     else:
-        entropies_raw = np.array([evolve_entropy(state, depth, p) for _ in range(shots)])
+        entropies_raw = np.array([evolve_entropy(state.copy(), depth, p) for _ in range(shots)])
     entropies_mean = np.mean(entropies_raw, axis = 0)
     entropies_std = np.std(entropies_raw, axis = 0, ddof = 1) / np.sqrt(shots)
     return np.array([entropies_mean, entropies_std])
