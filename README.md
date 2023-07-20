@@ -4,7 +4,8 @@
 * `-T`, default 256
 * `-s`, `--shots`, default 10
 * `-p`, default 0.1
-Output file is `n_T_s_p_*.npy`, where `*` is either `zero`, `me`, or `hist`.
+* `-D`, default 1
+Output file is `n_T_s_p_D_*.npy`, where `*` is either `zero`, `me`, or `hist`.
 ## Requirements
 NB: PyClifford will not run on Windows. Use a UNIX-based OS instead.
 * [`pyclifford`](https://github.com/hongyehu/PyClifford)
