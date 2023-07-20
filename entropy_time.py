@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, 'clifford')
+
 import numpy as np
 from tqdm import tqdm
 import pyclifford as pc
