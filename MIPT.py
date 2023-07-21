@@ -102,7 +102,7 @@ def me_state(N, D = 1):
         pc.stabilizer.StabilizerState: The maximally entangled state.
     """
     state = pc.zero_state(N)
-    circ = create_circuit(N, N // 2, 0, D)
+    circ = create_circuit(N, int(N / D) // 2, 0, D)
     state = circ.forward(state)
     return state
 

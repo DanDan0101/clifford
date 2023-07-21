@@ -28,7 +28,7 @@ stub = "data/{}_{}_{}_{}_{}_".format(n_qubits, depth, shots, p, D)
 
 ctime = time.time()
 
-print("Evolving entropies for p = {}:".format(p))
+print("Sampling entropies for p = {}:".format(p))
 S_p = []
 for _ in range(shots):
     circ = create_circuit(n_qubits, depth, p, D = D)
