@@ -31,3 +31,6 @@ srun: Terminating StepId=24829873.2
 slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.12. Some of the step tasks have been OOM Killed.
 srun: error: sh02-08n06: task 0: Out Of Memory
 srun: Terminating StepId=24829873.12
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.8. Some of the step tasks have been OOM Killed.
+srun: error: sh02-08n04: task 0: Out Of Memory
+srun: Terminating StepId=24829873.8
