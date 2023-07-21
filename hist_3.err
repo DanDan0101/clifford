@@ -25,3 +25,6 @@ slurmstepd: error: Detected 1 oom_kill event in StepId=24829843.7. Some of the s
 slurmstepd: error: Detected 1 oom_kill event in StepId=24829843.5. Some of the step tasks have been OOM Killed.
 srun: error: sh02-04n57: task 0: Out Of Memory
 srun: Terminating StepId=24829843.5
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 24829843 ON sh02-04n55 CANCELLED AT 2023-07-21T16:13:07 ***
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829843.batch. Some of the step tasks have been OOM Killed.

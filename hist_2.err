@@ -19,3 +19,8 @@ srun: Terminating StepId=24829841.6
 slurmstepd: error: Detected 1 oom_kill event in StepId=24829841.2. Some of the step tasks have been OOM Killed.
 srun: error: sh02-04n55: task 0: Out Of Memory
 srun: Terminating StepId=24829841.2
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 24829841 ON sh02-04n49 CANCELLED AT 2023-07-21T16:13:07 ***
+slurmstepd: error: *** STEP 24829841.9 ON sh02-04n55 CANCELLED AT 2023-07-21T16:13:07 ***
