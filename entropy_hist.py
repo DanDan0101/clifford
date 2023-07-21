@@ -24,7 +24,7 @@ depth = args.T
 shots = args.shots
 p = args.p
 D = args.D
-stub = "{}_{}_{}_{}_{}_".format(n_qubits, depth, shots, p, D)
+stub = "data/{}_{}_{}_{}_{}_".format(n_qubits, depth, shots, p, D)
 
 ctime = time.time()
 
