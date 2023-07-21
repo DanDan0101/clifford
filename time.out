@@ -34,3 +34,6 @@ p = 0.15 done in 17.0:2.0:7.445077657699585
 Evolving entropies for p = 0.01:
 p = 0.01 zero state done in 9.0:4.0:45.283950328826904
 p = 0.01 done in 18.0:24.0:10.924433946609497
+Evolving entropies for p = 0.0:
+p = 0.0 zero state done in 10.0:4.0:16.4028537273407
+p = 0.0 done in 20.0:48.0:18.06503987312317
