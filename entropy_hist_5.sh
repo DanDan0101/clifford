@@ -1,7 +1,7 @@
 #!/usr/bin/bash
-#SBATCH --job-name=entropy_hist
-#SBATCH --output=hist.out
-#SBATCH --error=hist.err
+#SBATCH --job-name=hist_5
+#SBATCH --output=hist_5.out
+#SBATCH --error=hist_5.err
 #SBATCH --time=24:00:00
 #SBATCH -p hns
 #SBATCH --ntasks=10

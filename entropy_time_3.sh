@@ -1,7 +1,7 @@
 #!/usr/bin/bash
-#SBATCH --job-name=entropy_time
-#SBATCH --output=time.out
-#SBATCH --error=time.err
+#SBATCH --job-name=time_3
+#SBATCH --output=time_3.out
+#SBATCH --error=time_3.err
 #SBATCH --time=24:00:00
 #SBATCH -p hns
 #SBATCH --ntasks=13
