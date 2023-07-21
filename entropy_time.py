@@ -16,32 +16,34 @@ parser.add_argument('-n', '--n_qubits', type = int, default = 512)
 parser.add_argument('-T', type = int, default = 256)
 parser.add_argument('-s', '--shots', type = int, default = 10)
 parser.add_argument('-p', type = float, default = 0.1)
+parser.add_argument('-D', type = int, default = 1)
 args = parser.parse_args()
 
 n_qubits = args.n_qubits
 depth = args.T
 shots = args.shots
 p = args.p
-stub = "{}_{}_{}_{}_".format(n_qubits, depth, shots, p)
+D = args.D
+stub = "{}_{}_{}_{}_{}_".format(n_qubits, depth, shots, p, D)
 
 ctime = time.time()
 
 print("Evolving entropies for p = {}:".format(p))
 
 state = pc.zero_state(n_qubits)
-entropies_zero = evolve_entropies(state, depth, p, shots, logging = False)
+entropies_zero = evolve_entropies(state, depth, p, shots, D = D, logging = False)
 
 wtime = time.time() - ctime
-print("p = {} zero state done in {}:{}:{}".format(p, wtime//3600, (wtime//60)%60, wtime%60))
+print("p = {} zero state done in {}:{}:{}".format(p, int(wtime//3600), int((wtime//60)%60), int(wtime%60)))
 
 with open(stub + "zero.npy", 'wb') as f:
     np.save(f, entropies_zero)
 
-state = me_state(n_qubits)
-entropies_me = evolve_entropies(state, depth, p, shots, logging = False)
+state = me_state(n_qubits, D = D)
+entropies_me = evolve_entropies(state, depth, p, shots, D = D, logging = False)
 
 wtime = time.time() - ctime
-print("p = {} done in {}:{}:{}".format(p, wtime//3600, (wtime//60)%60, wtime%60))
+print("p = {} done in {}:{}:{}".format(p, int(wtime//3600), int((wtime//60)%60), int(wtime%60)))
 
 with open(stub + "me.npy", 'wb') as f:
     np.save(f, entropies_me)
