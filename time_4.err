@@ -1,0 +1,27 @@
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829870.1. Some of the step tasks have been OOM Killed.
+srun: error: sh02-06n27: task 0: Out Of Memory
+srun: Terminating StepId=24829870.1
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829870.0. Some of the step tasks have been OOM Killed.
+srun: error: sh02-06n25: task 0: Out Of Memory
+srun: Terminating StepId=24829870.0
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829870.4. Some of the step tasks have been OOM Killed.
+srun: error: sh02-06n30: task 0: Out Of Memory
+srun: Terminating StepId=24829870.4
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829870.7. Some of the step tasks have been OOM Killed.
+srun: error: sh02-06n29: task 0: Out Of Memory
+srun: Terminating StepId=24829870.7
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829870.8. Some of the step tasks have been OOM Killed.
+srun: error: sh02-06n29: task 0: Out Of Memory
+srun: Terminating StepId=24829870.8
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829870.2. Some of the step tasks have been OOM Killed.
+srun: error: sh02-06n28: task 0: Out Of Memory
+srun: Terminating StepId=24829870.2
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829870.5. Some of the step tasks have been OOM Killed.
+srun: error: sh02-06n31: task 0: Out Of Memory
+srun: Terminating StepId=24829870.5
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829870.6. Some of the step tasks have been OOM Killed.
+srun: error: sh02-06n28: task 0: Out Of Memory
+srun: Terminating StepId=24829870.6
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829870.3. Some of the step tasks have been OOM Killed.
+srun: error: sh02-06n29: task 0: Out Of Memory
+srun: Terminating StepId=24829870.3

@@ -1,0 +1,31 @@
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829845.1. Some of the step tasks have been OOM Killed.
+srun: error: sh02-04n59: task 0: Out Of Memory
+srun: Terminating StepId=24829845.1
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829845.4. Some of the step tasks have been OOM Killed.
+srun: error: sh02-04n63: task 0: Out Of Memory
+srun: Terminating StepId=24829845.4
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829845.0. Some of the step tasks have been OOM Killed.
+srun: error: sh02-04n58: task 0: Out Of Memory
+srun: Terminating StepId=24829845.0
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829845.2. Some of the step tasks have been OOM Killed.
+srun: error: sh02-04n63: task 0: Out Of Memory
+srun: Terminating StepId=24829845.2
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829845.5. Some of the step tasks have been OOM Killed.
+srun: error: sh02-04n63: task 0: Out Of Memory
+srun: Terminating StepId=24829845.5
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829845.3. Some of the step tasks have been OOM Killed.
+srun: error: sh02-04n65: task 0: Out Of Memory
+srun: Terminating StepId=24829845.3
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829845.9. Some of the step tasks have been OOM Killed.
+srun: error: sh02-04n63: task 0: Out Of Memory
+srun: Terminating StepId=24829845.9
+srun: error: sh02-04n59: task 0: Out Of Memory
+srun: Terminating StepId=24829845.8
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829845.8. Some of the step tasks have been OOM Killed.
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829845.7. Some of the step tasks have been OOM Killed.
+srun: error: sh02-04n63: task 0: Out Of Memory
+srun: Terminating StepId=24829845.7
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829845.6. Some of the step tasks have been OOM Killed.
+srun: error: sh02-04n63: task 0: Out Of Memory
+srun: Terminating StepId=24829845.6
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829845.batch. Some of the step tasks have been OOM Killed.

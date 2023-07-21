@@ -1,0 +1,33 @@
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.9. Some of the step tasks have been OOM Killed.
+srun: error: sh02-08n05: task 0: Out Of Memory
+srun: Terminating StepId=24829873.9
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.11. Some of the step tasks have been OOM Killed.
+srun: error: sh02-08n05: task 0: Out Of Memory
+srun: Terminating StepId=24829873.11
+srun: error: sh02-08n04: task 0: Out Of Memory
+srun: Terminating StepId=24829873.7
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.7. Some of the step tasks have been OOM Killed.
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.4. Some of the step tasks have been OOM Killed.
+srun: error: sh02-08n06: task 0: Out Of Memory
+srun: Terminating StepId=24829873.4
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.5. Some of the step tasks have been OOM Killed.
+srun: error: sh02-08n02: task 0: Out Of Memory
+srun: Terminating StepId=24829873.5
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.10. Some of the step tasks have been OOM Killed.
+srun: error: sh02-08n05: task 0: Out Of Memory
+srun: Terminating StepId=24829873.10
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.1. Some of the step tasks have been OOM Killed.
+srun: error: sh02-08n03: task 0: Out Of Memory
+srun: Terminating StepId=24829873.1
+srun: error: sh02-08n02: task 0: Out Of Memory
+srun: Terminating StepId=24829873.0
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.0. Some of the step tasks have been OOM Killed.
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.3. Some of the step tasks have been OOM Killed.
+srun: error: sh02-08n05: task 0: Out Of Memory
+srun: Terminating StepId=24829873.3
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.2. Some of the step tasks have been OOM Killed.
+srun: error: sh02-08n04: task 0: Out Of Memory
+srun: Terminating StepId=24829873.2
+slurmstepd: error: Detected 1 oom_kill event in StepId=24829873.12. Some of the step tasks have been OOM Killed.
+srun: error: sh02-08n06: task 0: Out Of Memory
+srun: Terminating StepId=24829873.12
