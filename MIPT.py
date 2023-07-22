@@ -1,6 +1,5 @@
 import numpy as np
 import pyclifford as pc
-import torchclifford as tc
 from numba import njit
 from tqdm import tqdm
 
@@ -85,7 +84,7 @@ def create_circuit(N, depth, p, D = 1):
             circ = random_clifford(circ, even = False, D = D)
             circ = random_measurement(circ, p, D)
     else:
-        circ = tc.circuit.CliffordCircuit(N)
+        circ = pc.circuit.Circuit(N)
         for _ in range(depth):
             circ = random_clifford(circ, even = True, D = D)
             circ = random_clifford(circ, even = False, D = D)

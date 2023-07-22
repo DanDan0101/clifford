@@ -37,8 +37,8 @@ for _ in range(shots):
     S_p.append(entropy(state))
 S_p = np.array(S_p)
 
-wtime = time.time() - ctime
-print("p = {} done in {}:{}:{}".format(p, int(wtime//3600), int((wtime//60)%60), int(wtime%60)))
+wtime = time.strftime('%H:%M:%S', time.gmtime(int(time.time() - ctime)))
+print("p = {} done in {}:{}:{}".format(p, wtime))
 
 with open(stub + "hist.npy", 'wb') as f:
     np.save(f, S_p)

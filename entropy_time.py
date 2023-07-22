@@ -33,8 +33,8 @@ print("Evolving entropies for p = {}:".format(p))
 state = pc.zero_state(n_qubits)
 entropies_zero = evolve_entropies(state, depth, p, shots, D = D, logging = False)
 
-wtime = time.time() - ctime
-print("p = {} zero state done in {}:{}:{}".format(p, int(wtime//3600), int((wtime//60)%60), int(wtime%60)))
+wtime = time.strftime('%H:%M:%S', time.gmtime(int(time.time() - ctime)))
+print("p = {} zero state done in {}".format(p, wtime))
 
 with open(stub + "zero.npy", 'wb') as f:
     np.save(f, entropies_zero)
@@ -42,8 +42,8 @@ with open(stub + "zero.npy", 'wb') as f:
 state = me_state(n_qubits, D = D)
 entropies_me = evolve_entropies(state, depth, p, shots, D = D, logging = False)
 
-wtime = time.time() - ctime
-print("p = {} done in {}:{}:{}".format(p, int(wtime//3600), int((wtime//60)%60), int(wtime%60)))
+wtime = time.strftime('%H:%M:%S', time.gmtime(int(time.time() - ctime)))
+print("p = {} done in {}:{}:{}".format(p, wtime))
 
 with open(stub + "me.npy", 'wb') as f:
     np.save(f, entropies_me)
