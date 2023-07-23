@@ -10,4 +10,4 @@
 #SBATCH --mem-per-cpu=3G
 #SBATCH --mail-type=ALL
 
-python3 time.py -n 1536 -T 300 -p $(printf 0.%02i $SLURM_ARRAY_TASK_ID) -s 10 -D 3
+python3 S_time.py -n 1536 -T 300 -p $(printf 0.%02i $SLURM_ARRAY_TASK_ID) -s 10 -D 3

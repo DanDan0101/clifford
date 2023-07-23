@@ -3,14 +3,14 @@ sys.path.insert(0, 'clifford')
 
 import numpy as np
 import pyclifford as pc
-from MIPT import create_circuit, entropy
+from MIPT import evolve_entropies, me_state
 import time
 
 # Parse command line arguments
 import argparse
 parser = argparse.ArgumentParser(
     description = 'Run the Clifford circuit simulation.',
-    epilog = 'Saves final entropies to the current directory.'
+    epilog = 'Saves time-evolution of entropies to the current directory.'
 )
 parser.add_argument('-n', '--n_qubits', type = int, default = 512)
 parser.add_argument('-T', type = int, default = 256)
@@ -28,17 +28,22 @@ stub = "data/{}_{}_{}_{}_{}_".format(n_qubits, depth, shots, p, D)
 
 ctime = time.time()
 
-print("Sampling entropies for p = {}:".format(p))
-S_p = []
-for _ in range(shots):
-    circ = create_circuit(n_qubits, depth, p, D = D)
-    state = pc.zero_state(n_qubits)
-    state = circ.forward(state)
-    S_p.append(entropy(state))
-S_p = np.array(S_p)
+print("Evolving entropies for p = {}:".format(p))
+
+state = pc.zero_state(n_qubits)
+entropies_zero = evolve_entropies(state, depth, p, shots, D = D, logging = False)
 
 wtime = time.strftime('%H:%M:%S', time.gmtime(int(time.time() - ctime)))
-print("p = {} done in {}:{}:{}".format(p, wtime))
+print("p = {} zero state done in {}".format(p, wtime))
 
-with open(stub + "hist.npy", 'wb') as f:
-    np.save(f, S_p)
+with open(stub + "zero.npy", 'wb') as f:
+    np.save(f, entropies_zero)
+
+state = me_state(n_qubits, D = D)
+entropies_me = evolve_entropies(state, depth, p, shots, D = D, logging = False)
+
+wtime = time.strftime('%H:%M:%S', time.gmtime(int(time.time() - ctime)))
+print("p = {} done in {}".format(p, wtime))
+
+with open(stub + "me.npy", 'wb') as f:
+    np.save(f, entropies_me)
