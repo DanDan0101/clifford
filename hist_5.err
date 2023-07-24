@@ -1,0 +1,11 @@
+/var/spool/slurmd/job24950654/slurm_script: line 13: 21790 Killed                  python3 S_hist.py -n 2560 -T 256 -p $(printf 0.%02i $SLURM_ARRAY_TASK_ID) -s 100 -D 5
+slurmstepd: error: Detected 1 oom_kill event in StepId=24950654.batch. Some of the step tasks have been OOM Killed.
+/var/spool/slurmd/job24951711/slurm_script: line 13: 28736 Killed                  python3 S_hist.py -n 2560 -T 256 -p $(printf 0.%02i $SLURM_ARRAY_TASK_ID) -s 100 -D 5
+slurmstepd: error: Detected 1 oom_kill event in StepId=24951711.batch. Some of the step tasks have been OOM Killed.
+/var/spool/slurmd/job24950651/slurm_script: line 13: 26930 Killed                  python3 S_hist.py -n 2560 -T 256 -p $(printf 0.%02i $SLURM_ARRAY_TASK_ID) -s 100 -D 5
+slurmstepd: error: Detected 1 oom_kill event in StepId=24950651.batch. Some of the step tasks have been OOM Killed.
+slurmstepd: error: *** JOB 24946685 ON sh02-04n57 CANCELLED AT 2023-07-24T01:18:27 DUE TO TIME LIMIT ***
+slurmstepd: error: *** JOB 24949917 ON sh02-04n65 CANCELLED AT 2023-07-24T01:33:32 DUE TO TIME LIMIT ***
+slurmstepd: error: *** JOB 24950653 ON sh02-08n09 CANCELLED AT 2023-07-24T01:56:47 DUE TO TIME LIMIT ***
+slurmstepd: error: *** JOB 24951755 ON sh03-10n30 CANCELLED AT 2023-07-24T03:13:17 DUE TO TIME LIMIT ***
+slurmstepd: error: *** JOB 24944668 ON sh03-07n50 CANCELLED AT 2023-07-24T03:29:38 DUE TO TIME LIMIT ***
