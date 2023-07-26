@@ -134,6 +134,50 @@ def entropy(state, D = 1, A = None):
         A = [i for i in range(L // 2)]
     return state.entropy([j for i in A for j in qubit_pos(i, D)])
 
+def bip_info(state, D = 1, recip_size = 8):
+    """Calculates the bipartite mutual information of two opposite subsystems.
+
+    Args:
+        state (pc.stabilizer.StabilizerState): The state to calculate the mutual information of.
+        D (int, optional): The number of qubits per qudit. Defaults to 1.
+        recip_size (int, optional): The reciprocal size of the subsystems, in terms of L. Defaults to 8.
+    
+    Returns:
+        float: The bipartite mutual information.
+    """
+    N = state.N
+    L = int(N / D)
+    assert recip_size > 2
+    subsys_size = int(L / recip_size)
+    subsys_1 = [i for i in range(subsys_size)]
+    subsys_2 = [int(L / 2) + i for i in range(subsys_size)]
+    return entropy(state, D, subsys_1) + entropy(state, D, subsys_2) - entropy(state, D, subsys_1 + subsys_2)
+
+def trip_info(state, D = 1, recip_size = 4):
+    """Calculates the negative tripartite mutual information of three adjacent subsystems.
+    
+    Args:
+        state (pc.stabilizer.StabilizerState): The state to calculate the mutual information of.
+        D (int, optional): The number of qubits per qudit. Defaults to 1.
+        recip_size (int, optional): The reciprocal size of the subsystems, in terms of L. Defaults to 4.
+    
+    Returns:
+        float: The negative tripartite mutual information.
+    """
+    N = state.N
+    L = int(N / D)
+    assert recip_size > 3
+
+    subsys_size = int(L / recip_size)
+    subsys_1 = [i for i in range(subsys_size)]
+    subsys_2 = [i + subsys_size for i in range(subsys_size)]
+    subsys_3 = [i + 2 * subsys_size for i in range(subsys_size)]
+
+    info_1 = entropy(state, D, subsys_1) + entropy(state, D, subsys_2) + entropy(state, D, subsys_3)
+    info_2 = entropy(state, D, subsys_1 + subsys_2) + entropy(state, D, subsys_2 + subsys_3) + entropy(state, D, subsys_3 + subsys_1)
+    info_3 = entropy(state, D, subsys_1 + subsys_2 + subsys_3)
+    return -info_1 + info_2 - info_3
+
 def evolve_entropy(state, depth, p, D = 1):
     """Computes the bipartite entanglement entropy of the state under random time evolution.
 
