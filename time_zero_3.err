@@ -1,0 +1,1 @@
+/var/spool/slurmd/job25205908/slurm_script: line 13: 172625 Segmentation fault      python3 S_time_zero.py -L 512 -T 300 -p $(printf 0.%02i $SLURM_ARRAY_TASK_ID) -s 10 -D 3
