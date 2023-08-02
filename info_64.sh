@@ -10,4 +10,4 @@
 #SBATCH --mem-per-cpu=1G
 #SBATCH --mail-type=ALL
 
-python3 info.py -L 64 -T 32 -p $(printf 0.%02i $SLURM_ARRAY_TASK_ID) -s 10000 -t 100 -D 1
+python3 info.py -L 64 -T 32 -p $(printf 0.%03i $SLURM_ARRAY_TASK_ID) -s 10000 -t 100 -D 1
