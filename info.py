@@ -33,7 +33,6 @@ D = args.D
 N = L * D
 stub = "data/{}_{}_{}_{}_{}_".format(L, depth, shots * timesteps, p, D)
 
-MAX_TIME = 60 * 60 * 23 # 23 hours
 start_time = time.time()
 
 print("Sampling information for p = {}:".format(p))
