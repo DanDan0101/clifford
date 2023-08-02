@@ -5,10 +5,11 @@
 * `-L`, default 512
 * `-T`, default 256
 * `-s`, `--shots`, default 10
+* `-t`, default 10
 * `-p`, default 0.1
 * `-D`, default 1
 
-Output file is `L_T_s_p_D_*.npy`, where `*` is either `zero`, `me`, or `hist`.
+Output file is `L_T_st_p_D_*.npy`, where `*` is either `zero`, `me`, or `hist`.
 
 ## Requirements
 
@@ -21,6 +22,7 @@ NB: PyClifford will not run on Windows. Use a UNIX-based OS instead.
 * `matplotlib`
 * `seaborn`
 * `tqdm`
+* `multiprocess`
 
 ## References
 
