@@ -5,7 +5,7 @@
 #SBATCH --time=23:30:00
 #SBATCH -p normal
 #SBATCH --array=155-165
-#SBATCH -c 8
+#SBATCH -c 16
 #SBATCH --mem-per-cpu=4G
 #SBATCH --mail-type=ALL
 
