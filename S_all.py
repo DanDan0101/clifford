@@ -58,7 +58,7 @@ start_time = time.time()
 
 print("Sampling all entropies for L = {}, D = {}, p = {}:".format(L, D, p))
 
-def sample_all_entropies(state):
+def sample_all_entropies(state, D = D):
     result = []
     N = state.N
     L = int(N / D)
