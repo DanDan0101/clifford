@@ -44,7 +44,7 @@ t -= 1
 D = 1
 L = 2**(4+t)
 
-depth = int(L / 2)
+depth = int(16*L)
 shots = 256
 timesteps = 128
 N = L * D

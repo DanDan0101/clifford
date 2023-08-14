@@ -3,7 +3,7 @@
 #SBATCH --open-mode=append
 #SBATCH --output=entropies.out
 #SBATCH --error=entropies.err
-#SBATCH --time=1:00:00
+#SBATCH --time=2:00:00
 #SBATCH -p hns
 #SBATCH --array=1-6
 #SBATCH -c 16
