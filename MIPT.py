@@ -235,3 +235,19 @@ def evolve_entropies(L, depth, p, zero = True, shots = 10, D = 1, logging = True
     entropies_mean = np.mean(entropies_raw, axis = 0)
     entropies_std = np.std(entropies_raw, axis = 0, ddof = 1) / np.sqrt(shots)
     return np.array([entropies_mean, entropies_std])
+
+@njit
+def xi(L, z1, z2):
+    """Calculates xi, as defined by Li et al. in https://arxiv.org/abs/2003.12721.
+
+    Args:
+        L (int): The number of qudits in the state.
+        z1 (int): The first qudit position.
+        z2 (int): The second qudit position.
+
+    Returns:
+        float: xi.
+    """
+    if z1 == z2:
+        raise ValueError("z1 and z2 must be different")
+    return (np.pi / L / np.sin(np.pi * (z1 - z2) / L)) ** 2
