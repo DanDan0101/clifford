@@ -20,6 +20,9 @@ parser.add_argument('-t', type = int, default = 1)
 args = parser.parse_args()
 t = args.t
 
+
+
+"""
 # Parameter space [24]
 # D: {2-5} [4]
 # L: 2**{4-9} [6]
@@ -34,7 +37,12 @@ D = 2 + int(t / 6)
 t = t % 6
 
 # t is 0 to 5
-L = 2**(4 + t)
+L = 2**(4 + t)"""
+
+t -= 1
+# t is 0 to 5
+D = 1
+L = 2**(4+t)
 
 depth = int(L / 2)
 shots = 256
