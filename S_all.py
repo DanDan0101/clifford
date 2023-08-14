@@ -34,7 +34,7 @@ D = 2 + int(t / 6)
 t = t % 6
 
 # t is 0 to 5
-L = 2**(4 + int(t / 41))
+L = 2**(4 + t)
 
 depth = int(L / 2)
 shots = 256
