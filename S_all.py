@@ -62,7 +62,7 @@ def sample_all_entropies(state):
     result = []
     qudits = [0]
     for i in range(1, int(L / 2) + 1):
-        qudits.extend(i)
+        qudits.append(i)
         x = xi(L, 0, i)
         y = entropy(state, D, qudits)
         result.append((x, y))
