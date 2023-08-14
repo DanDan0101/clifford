@@ -60,11 +60,11 @@ print("Sampling all entropies for L = {}, D = {}, p = {}:".format(L, D, p))
 
 def sample_all_entropies(state):
     result = []
-    qubits = []
+    qudits = [0]
     for i in range(1, int(L / 2) + 1):
-        qubits.extend(qubit_pos(i, D))
+        qudits.extend(i)
         x = xi(L, 0, i)
-        y = entropy(state, D, qubits)
+        y = entropy(state, D, qudits)
         result.append((x, y))
     return np.array(result)
 
