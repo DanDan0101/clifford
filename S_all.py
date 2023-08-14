@@ -58,10 +58,8 @@ start_time = time.time()
 
 print("Sampling all entropies for L = {}, D = {}, p = {}:".format(L, D, p))
 
-def sample_all_entropies(state, D = D):
+def sample_all_entropies(state):
     result = []
-    N = state.N
-    L = int(N / D)
     qubits = []
     for i in range(1, int(L / 2) + 1):
         qubits.extend(qubit_pos(i, D))
@@ -74,11 +72,11 @@ def sample(dummy):
     circ = create_circuit(L, depth, p, D)
     state = pc.zero_state(N)
     circ.forward(state)
-    buffer = sample_all_entropies(state, D)
+    buffer = sample_all_entropies(state)
     for i in range(timesteps - 1):
         circ = create_circuit(L, 1, p, D)
         circ.forward(state)
-        buffer = np.vstack((buffer, sample_all_entropies(state, D)))
+        buffer = np.vstack((buffer, sample_all_entropies(state)))
     return buffer
 
 runs = np.repeat(0, shots)
