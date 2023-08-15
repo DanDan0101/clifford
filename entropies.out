@@ -1,0 +1,11 @@
+Using 16 CPUs.
+Sampling all entropies for L = 16, D = 1, p = 0.16:
+L = 16, D = 1, p = 0.16 done in 00:00:33
+Using 16 CPUs.
+Sampling all entropies for L = 64, D = 1, p = 0.16:
+L = 32, D = 1, p = 0.16 done in 00:01:00
+L = 64, D = 1, p = 0.16 done in 00:03:24
+Using 16 CPUs.
+Sampling all entropies for L = 512, D = 1, p = 0.16:
+L = 128, D = 1, p = 0.16 done in 00:07:30
+L = 256, D = 1, p = 0.16 done in 00:48:04
