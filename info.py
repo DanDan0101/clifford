@@ -2,11 +2,11 @@ import sys
 sys.path.insert(0, 'clifford')
 
 import numpy as np
-import pyclifford as pc
-from MIPT import create_circuit, trip_info
+from MIPT import sample, trip_info
 import time
 import os
 from multiprocess import Pool
+
 num_cpus = len(os.sched_getaffinity(0))
 print("Using {} CPUs.".format(num_cpus))
 
@@ -14,80 +14,73 @@ print("Using {} CPUs.".format(num_cpus))
 import argparse
 parser = argparse.ArgumentParser(
     description = 'Run the Clifford circuit simulation.',
-    epilog = 'Saves time-evolution of information to the current directory.'
+    epilog = 'Saves mean, std of tripartite information to the data directory.'
 )
 parser.add_argument('-t', type = int, default = 1)
 args = parser.parse_args()
 t = args.t
 
-# Parameter space [984]
-# D: {2-5} [4]
+# Parameter space [330]
+# D: {1-5} [5]
 # L: 2**{4-9} [6]
-# p: {10-50}/100 [41]
-# depth: L/2
+# p: pc +/- 0.005 [11]
+# depth: L // 2
 # timesteps: 128
 
 t -= 1
-# t is 0 to 983
+# t is 0 to 329
 
-D = 2 + int(t / 246)
-t = t % 246
+D = 1 + t // 66
+t %= 66
 
-# t is 0 to 245
-L = 2**(4 + int(t / 41))
-t = t % 41
+# t is 0 to 65
+L = 2**(4 + t // 11)
+t %= 11
 
-# t is 0 to 40
-p = 0.1 + 0.01 * t
+p_dict = {
+    1: 0.16,
+    2: 0.33,
+    3: 0.418,
+    4: 0.458,
+    5: 0.478
+}
 
-depth = int(L / 2)
-shots = 128
-timesteps = 128
+# t is 0 to 10
+p = p_dict[D] + 0.001 * (t - 5)
+
+depth = L // 2
+shots = 32
+timesteps = 256
+TIMELIMIT = 60 * 60 * 24 * 11 # 11 hours
 
 N = L * D
-stub = "data/{}_{}_{}_{}_{}_".format(L, depth, shots * timesteps, p, D)
 
 start_time = time.time()
 
 print("Sampling information for L = {}, D = {}, p = {}:".format(L, D, p))
 
-def sample_trip(p):
-    """Samples tripartite information.
+f = lambda state: trip_info(state, D)
 
-    Args:
-        p (float): The probability of measuring a qudit.
-    
-    Returns:
-        float: The average tripartite information.
-        float: The tripartite information at the end of the circuit.
-    """
-    trips = []
-    circ = create_circuit(L, depth, p, D = D)
-    state = pc.zero_state(N)
-    circ.forward(state)
-    trips.append(trip_info(state, D = D))
+run = 0
+accumulator = np.zeros(2)
 
-    for _ in range(timesteps - 1):
-        circ = create_circuit(L, 1, p, D = D)
-        circ.forward(state)
-        trips.append(trip_info(state, D = D))
-    
-    trips = np.array(trips)
-    return np.mean(trips), trips[-1]
+while time.time() - start_time < TIMELIMIT:
+    with Pool(num_cpus) as pool:
+        results = pool.starmap(lambda: sample(f, L, p, D, timesteps, depth), [[]] * shots)
+    results = np.mean(np.array(results), axis = 0)
+    accumulator += results
+    run += 1
+accumulator /= run
 
-runs = np.repeat(p, shots)
+mean = accumulator[0]
+std = np.sqrt(accumulator[1] - mean**2) / np.sqrt(run * shots * timesteps)
 
-with Pool(num_cpus) as pool:
-    result = pool.map(sample_trip, runs)
+result = np.array((mean, std))
 
-result = np.array(result)
-result = np.reshape(result, (-1, 2))
-std = np.std(result[:, 1], ddof = 1)
-result = np.mean(result, axis = 0)
-result[1] = std / np.sqrt(runs.shape[0])
-
-end_time = time.strftime('%H:%M:%S', time.gmtime(int(time.time() - start_time)))
-print("L = {}, D = {}, p = {} done in {}".format(L, D, p, end_time))
+stub = "data/{}_{}_{}_{}_{}_".format(L, depth, run * shots * timesteps, p, D)
 
 with open(stub + "info.npy", 'wb') as f:
     np.save(f, result)
+
+end_time = time.strftime('%H:%M:%S', time.gmtime(int(time.time() - start_time)))
+print("L = {}, D = {}, p = {} done in {}, completed {} runs.".format(L, D, p, end_time, run))

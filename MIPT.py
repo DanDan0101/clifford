@@ -29,7 +29,7 @@ def random_clifford(circ, even = True, D = 1):
     """
     N = circ.N
     assert N % D == 0
-    L = int(N / D)
+    L = N // D
 
     for i in range(L // 2):
         if even:
@@ -69,7 +69,7 @@ def random_measurement(circ, p, D = 1):
     Returns:
         None
     """
-    L = int(circ.N / D)
+    L = circ.N // D
     pos = generate_measurement_position(L, p, D)
     if pos: # not empty
         circ.measure(*pos)
@@ -117,22 +117,27 @@ def me_state(L, D = 1):
     circ.forward(state)
     return state
 
-def entropy(state, D = 1, A = None):
+def entropy(state, D = 1, A = None, log2 = False):
     """Calculates the bipartite entanglement entropy of the state.
 
     Args:
         state (pc.stabilizer.StabilizerState): The state to calculate the entropy of.
         D (int, optional): The number of qubits per qudit. Defaults to 1.
         A (list, optional): The list of qudit positions to calculate the entropy of. Defaults to None (first half of the qudits)
-
+        log2 (bool, optional): Whether to return the entropy in base e or base 2. Defaults to False.
+        
     Returns:
         float: The bipartite entanglement entropy.
     """
     N = state.N
-    L = int(N / D)
+    L = N // D
     if A is None:
         A = [i for i in range(L // 2)]
-    return state.entropy([j for i in A for j in qubit_pos(i, D)])
+    entropy_log2 = state.entropy([j for i in A for j in qubit_pos(i, D)])
+    if log2:
+        return entropy_log2
+    else:
+        return entropy_log2 * np.log(2)
 
 def bip_info(state, D = 1, recip_size = 8):
     """Calculates the bipartite mutual information of two opposite subsystems.
@@ -146,11 +151,11 @@ def bip_info(state, D = 1, recip_size = 8):
         float: The bipartite mutual information.
     """
     N = state.N
-    L = int(N / D)
+    L = N // D
     assert recip_size > 2
-    subsys_size = int(L / recip_size)
+    subsys_size = L // recip_size
     subsys_1 = [i for i in range(subsys_size)]
-    subsys_2 = [int(L / 2) + i for i in range(subsys_size)]
+    subsys_2 = [L // 2 + i for i in range(subsys_size)]
     return entropy(state, D, subsys_1) + entropy(state, D, subsys_2) - entropy(state, D, subsys_1 + subsys_2)
 
 def trip_info(state, D = 1, recip_size = 4):
@@ -165,7 +170,7 @@ def trip_info(state, D = 1, recip_size = 4):
         float: The negative tripartite mutual information.
     """
     N = state.N
-    L = int(N / D)
+    L = N // D
     assert recip_size > 3
 
     subsys_size = int(L / recip_size)
@@ -178,63 +183,42 @@ def trip_info(state, D = 1, recip_size = 4):
     info_3 = entropy(state, D, subsys_1 + subsys_2 + subsys_3)
     return -info_1 + info_2 - info_3
 
-def evolve_entropy(state, depth, p, D = 1):
-    """Computes the bipartite entanglement entropy of the state under random time evolution.
-
-    Args:
-        state (pc.stabilizer.StabilizerState): The initial state.
-        depth (int): The number of time steps.
-        p (float): The probability of measuring each qudit.
-        D (int, optional): The number of qubits per qudit. Defaults to 1.
-
-    Returns:
-        np.ndarray: An array of shape (depth + 1,) containing the bipartite entanglement entropies.
+def sample(f, L, p, D = 1, timesteps = 128, depth = None):
     """
-    N = state.N
-    L = int(N / D)
-    entropies = [entropy(state, D)]
-    for _ in range(depth):
-        circ = create_circuit(L, 1, p, D)
-        circ.forward(state)
-        entropies.append(entropy(state, D))
-    return np.array(entropies)
-
-def evolve_entropies(L, depth, p, zero = True, shots = 10, D = 1, logging = True):
-    """Computes an ensemble average version of evolve_entropy.
+    Samples a function f from a stabilizer state.
 
     Args:
+        f (function): The function to sample. Takes a pc.stabilizer.StabilizerState as input and returns a float.
         L (int): The number of qudits in the state.
-        depth (int): The number of time steps.
         p (float): The probability of measuring each qudit.
-        zero (bool, optional): Whether to start from the zero state. Defaults to True.
-        shots (int, optional): The number of samples to average over. Defaults to 10.
         D (int, optional): The number of qubits per qudit. Defaults to 1.
-        logging (bool, optional): Whether to display a progress bar. Defaults to True.
-    
+        timesteps (int, optional): The number of timesteps to sample for. Defaults to 128.
+        depth (int, optional): The initial depth of the circuit. Defaults to None (L // 2).
     Returns:
-        np.ndarray: An array of shape (2, depth + 1) containing the mean and std of the bipartite entanglement entropies.
+        float: mean of f over the samples.
+        float: mean of f^2 over the samples.
     """
     N = L * D
-    entropies_raw = []
-    if logging:
-        for _ in tqdm(range(shots)):
-            if zero:
-                state = pc.zero_state(N)
-            else:
-                state = me_state(L, D)
-            entropies_raw.append(evolve_entropy(state, depth, p, D))
-    else:
-        for _ in range(shots):
-            if zero:
-                state = pc.zero_state(N)
-            else:
-                state = me_state(L, D)
-            entropies_raw.append(evolve_entropy(state, depth, p, D))
-    
-    entropies_raw = np.array(entropies_raw)
-    entropies_mean = np.mean(entropies_raw, axis = 0)
-    entropies_std = np.std(entropies_raw, axis = 0, ddof = 1) / np.sqrt(shots)
-    return np.array([entropies_mean, entropies_std])
+    state = pc.zero_state(N)
+    if depth is None:
+        depth = L // 2
+    circ = create_circuit(L, depth, p, D)
+    circ.forward(state)
+    samples = np.zeros(timesteps)
+    parity = True
+
+    for i in range(timesteps):
+        samples[i] = f(state)
+        circ = pc.circuit.Circuit(N)
+        if parity:
+            random_clifford(circ, even = True, D = D)
+        else:
+            random_clifford(circ, even = False, D = D)
+        if p > 0:
+            random_measurement(circ, p, D)
+        circ.forward(state)
+        parity = not parity
+    return np.mean(samples), np.mean(samples**2)
 
 @njit
 def xi(L, z1, z2):
