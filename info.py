@@ -25,7 +25,6 @@ t = args.t
 # L: 2**{4-9} [6]
 # p: pc +/- 0.005 [11]
 # depth: L // 2
-# timesteps: 128
 
 t -= 1
 # t is 0 to 329
@@ -51,7 +50,8 @@ p = p_dict[D] + 0.001 * (t - 5)
 depth = L // 2
 shots = 32
 timesteps = 256
-TIMELIMIT = 60 * 60 * 24 * 11 # 11 hours
+TIMELIMIT = 60 * 60 * 11 # 11 hours
+MAXRUNS = 32
 
 N = L * D
 
@@ -64,7 +64,7 @@ f = lambda state: trip_info(state, D)
 run = 0
 accumulator = np.zeros(2)
 
-while time.time() - start_time < TIMELIMIT:
+while time.time() - start_time < TIMELIMIT and run < MAXRUNS:
     with Pool(num_cpus) as pool:
         results = pool.starmap(lambda: sample(f, L, p, D, timesteps, depth), [[]] * shots)
     results = np.mean(np.array(results), axis = 0)
