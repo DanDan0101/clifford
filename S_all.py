@@ -3,7 +3,7 @@ sys.path.insert(0, 'clifford')
 
 import numpy as np
 import pyclifford as pc
-from MIPT import create_circuit, qubit_pos, xi, entropy
+from MIPT import create_circuit, qubit_pos, xi, entropy, sample
 import time
 import os
 from multiprocess import Pool
@@ -20,36 +20,31 @@ parser.add_argument('-t', type = int, default = 1)
 args = parser.parse_args()
 t = args.t
 
-
-
-"""
-# Parameter space [24]
-# D: {2-5} [4]
+# Parameter space [30]
+# D: {1-5} [5]
 # L: 2**{4-9} [6]
 # p: pc
-# depth: L/2
-# timesteps: 128
+# depth: L // 2
+# timesteps: 256
 
 t -= 1
-# t is 0 to 23
+# t is 0 to 29
 
-D = 2 + int(t / 6)
+D = 1 + t // 6
 t = t % 6
 
 # t is 0 to 5
-L = 2**(4 + t)"""
+L = 2**(4 + t)
 
-t -= 1
-# t is 0 to 5
-D = 1
-L = 2**(4+t)
+depth = L // 2
+shots = 32
+timesteps = 256
+TIMELIMIT = 60 * 60 * 11 # 11 hours
+MAXRUNS = 32
 
-depth = int(16*L)
-shots = 256
-timesteps = 128
 N = L * D
 
-p_dict = {
+p_dict = { # TODO update
     1: 0.16,
     2: 0.33,
     3: 0.418,
@@ -58,49 +53,40 @@ p_dict = {
 }
 p = p_dict[D]
 
-YT = 0.61
-
-stub = "data/{}_{}_{}_{}_{}_".format(L, depth, shots * timesteps, p, D)
-
 start_time = time.time()
 
 print("Sampling all entropies for L = {}, D = {}, p = {}:".format(L, D, p))
 
-def sample_all_entropies(state):
+def f(state):
     result = []
     qudits = [0]
-    for i in range(1, int(L / 2) + 1):
+    for i in range(1, L // 2 + 1):
         qudits.append(i)
         x = xi(L, 0, i)
         y = entropy(state, D, qudits)
         result.append((x, y))
-    return np.array(result)
+    return np.array(result) # L // 2 x 2
 
-def sample(dummy):
-    circ = create_circuit(L, depth, p, D)
-    state = pc.zero_state(N)
-    circ.forward(state)
-    buffer = sample_all_entropies(state)
-    for i in range(timesteps - 1):
-        circ = create_circuit(L, 1, p, D)
-        circ.forward(state)
-        buffer = np.vstack((buffer, sample_all_entropies(state)))
-    return buffer
+run = 0
+accumulator = np.zeros((L // 2, 2))
 
-runs = np.repeat(0, shots)
+while time.time() - start_time < TIMELIMIT and run < MAXRUNS:
+    with Pool(num_cpus) as pool:
+        results = pool.starmap(lambda: sample(f, L, p, D, timesteps, depth), [[]] * shots)
+    results = np.mean(np.array(results), axis = 0)
+    accumulator += results
+    run += 1
+accumulator /= run
 
-with Pool(num_cpus) as pool:
-    results = pool.map(sample, range(shots))
+mean = accumulator[:, 0]
+std = np.sqrt(accumulator[:, 1] - mean**2) / np.sqrt(run * shots * timesteps)
 
-results = np.array(results).reshape((-1,int(L / 2),2))
+result = np.stack((mean, std))
 
-means = np.mean(results, axis = 0)
-stds = np.std(results[:, :, 1], axis = 0, ddof = 1) / np.sqrt(results.shape[0])
-
-result = np.stack((means[:, 0], means[:, 1], stds))
-
-end_time = time.strftime('%H:%M:%S', time.gmtime(int(time.time() - start_time)))
-print("L = {}, D = {}, p = {} done in {}".format(L, D, p, end_time))
+stub = "data/{}_{}_{}_{}_{}_".format(L, depth, run * shots * timesteps, p, D)
 
 with open(stub + "entropies_all.npy", 'wb') as f:
     np.save(f, result)
+
+end_time = time.strftime('%H:%M:%S', time.gmtime(int(time.time() - start_time)))
+print("L = {}, D = {}, p = {} done in {}, completed {} runs.".format(L, D, p, end_time, run))

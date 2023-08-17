@@ -188,23 +188,25 @@ def sample(f, L, p, D = 1, timesteps = 128, depth = None):
     Samples a function f from a stabilizer state.
 
     Args:
-        f (function): The function to sample. Takes a pc.stabilizer.StabilizerState as input and returns a float.
+        f (function): The function to sample. Takes a pc.stabilizer.StabilizerState as input and returns a numpy.ndarray.
         L (int): The number of qudits in the state.
         p (float): The probability of measuring each qudit.
         D (int, optional): The number of qubits per qudit. Defaults to 1.
         timesteps (int, optional): The number of timesteps to sample for. Defaults to 128.
         depth (int, optional): The initial depth of the circuit. Defaults to None (L // 2).
     Returns:
-        float: mean of f over the samples.
-        float: mean of f^2 over the samples.
+        numpy.ndarray: mean of f over the samples.
+        numpy.ndarray: mean of f^2 over the samples.
     """
     N = L * D
     state = pc.zero_state(N)
+    result_shape = f(state).shape
+
     if depth is None:
         depth = L // 2
     circ = create_circuit(L, depth, p, D)
     circ.forward(state)
-    samples = np.zeros(timesteps)
+    samples = np.zeros((timesteps,) + result_shape)
     parity = True
 
     for i in range(timesteps):
@@ -218,7 +220,7 @@ def sample(f, L, p, D = 1, timesteps = 128, depth = None):
             random_measurement(circ, p, D)
         circ.forward(state)
         parity = not parity
-    return np.mean(samples), np.mean(samples**2)
+    return np.mean(samples, axis = 0), np.mean(samples**2, axis = 0)
 
 @njit
 def xi(L, z1, z2):
