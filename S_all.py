@@ -80,8 +80,8 @@ while time.time() - start_time < TIMELIMIT and run < MAXRUNS:
     std = np.sqrt(accumulator[1, :] / run - mean**2) / np.sqrt(run * shots * timesteps)
     result = np.stack((mean, std))
     stub = "data/{}_{}_{}_{}_{}_".format(L, depth, run * shots * timesteps, p, D)
-    with open(stub + "entropies_all.npy", 'wb') as f:
-        np.save(f, result)
+    with open(stub + "entropies_all.npy", 'wb') as filename:
+        np.save(filename, result)
 
 end_time = time.strftime('%H:%M:%S', time.gmtime(int(time.time() - start_time)))
 print("L = {}, D = {}, p = {} done in {}, completed {} runs.".format(L, D, p, end_time, run))
