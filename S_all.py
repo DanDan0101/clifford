@@ -13,7 +13,7 @@ print("Using {} CPUs.".format(num_cpus))
 import argparse
 parser = argparse.ArgumentParser(
     description = 'Run the Clifford circuit simulation.',
-    epilog = 'Saves entropy graph to the current directory.'
+    epilog = 'Saves entropies to the current directory.'
 )
 parser.add_argument('-t', type = int, default = 1)
 args = parser.parse_args()
@@ -36,19 +36,19 @@ t = t % 6
 L = 2**(4 + t)
 
 depth = L // 2
-shots = 32
+shots = 16
 timesteps = 256
-TIMELIMIT = 60 * 60 * 11 # 11 hours
-MAXRUNS = 32
+TIMELIMIT = 60 * 60 * 10 # 10 hours
+MAXRUNS = 64
 
 N = L * D
 
-p_dict = { # TODO update
-    1: 0.16,
-    2: 0.33,
-    3: 0.418,
+p_dict = {
+    1: 0.15967,
+    2: 0.32865,
+    3: 0.416,
     4: 0.458,
-    5: 0.478
+    5: 0.4792
 }
 p = p_dict[D]
 
@@ -75,17 +75,13 @@ while time.time() - start_time < TIMELIMIT and run < MAXRUNS:
     results = np.mean(np.array(results), axis = 0)
     accumulator += results
     run += 1
-accumulator /= run
 
-mean = accumulator[0, :]
-std = np.sqrt(accumulator[1, :] - mean**2) / np.sqrt(run * shots * timesteps)
-
-result = np.stack((mean, std))
-
-stub = "data/{}_{}_{}_{}_{}_".format(L, depth, run * shots * timesteps, p, D)
-
-with open(stub + "entropies_all.npy", 'wb') as f:
-    np.save(f, result)
+    mean = accumulator[0, :] / run
+    std = np.sqrt(accumulator[1, :] / run - mean**2) / np.sqrt(run * shots * timesteps)
+    result = np.stack((mean, std))
+    stub = "data/{}_{}_{}_{}_{}_".format(L, depth, run * shots * timesteps, p, D)
+    with open(stub + "entropies_all.npy", 'wb') as f:
+        np.save(f, result)
 
 end_time = time.strftime('%H:%M:%S', time.gmtime(int(time.time() - start_time)))
 print("L = {}, D = {}, p = {} done in {}, completed {} runs.".format(L, D, p, end_time, run))
