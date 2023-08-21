@@ -1,7 +1,6 @@
 import numpy as np
 import pyclifford as pc
 from numba import njit
-from tqdm import tqdm
 
 @njit
 def qubit_pos(i, D = 1):
@@ -195,22 +194,23 @@ def sample(f, L, p, D = 1, timesteps = 128, depth = None):
         timesteps (int, optional): The number of timesteps to sample for. Defaults to 128.
         depth (int, optional): The initial depth of the circuit. Defaults to None (L // 2).
     Returns:
-        numpy.ndarray: mean of f over the samples.
-        numpy.ndarray: mean of f^2 over the samples.
+        numpy.ndarray: An array with two columns containing the mean of f and f^2 over the samples.
     """
     N = L * D
     state = pc.zero_state(N)
-    result_shape = f(state).shape
+    accumulator = np.zeros_like(f(state))
+    accumulator_sq = np.zeros_like(accumulator)
 
     if depth is None:
         depth = L // 2
     circ = create_circuit(L, depth, p, D)
     circ.forward(state)
-    samples = np.zeros((timesteps,) + result_shape)
     parity = True
 
-    for i in range(timesteps):
-        samples[i] = f(state)
+    for _ in range(timesteps):
+        result = f(state)
+        accumulator += result
+        accumulator_sq += result ** 2
         circ = pc.circuit.Circuit(N)
         if parity:
             random_clifford(circ, even = True, D = D)
@@ -220,7 +220,11 @@ def sample(f, L, p, D = 1, timesteps = 128, depth = None):
             random_measurement(circ, p, D)
         circ.forward(state)
         parity = not parity
-    return np.mean(samples, axis = 0), np.mean(samples**2, axis = 0)
+    
+    accumulator /= timesteps
+    accumulator_sq /= timesteps
+
+    return np.stack((accumulator, accumulator_sq))
 
 @njit
 def xi(L, z1, z2):

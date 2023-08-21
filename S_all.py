@@ -2,8 +2,7 @@ import sys
 sys.path.insert(0, 'clifford')
 
 import numpy as np
-import pyclifford as pc
-from MIPT import create_circuit, qubit_pos, xi, entropy, sample
+from MIPT import xi, entropy, sample
 import time
 import os
 from multiprocess import Pool
@@ -62,13 +61,13 @@ def f(state):
     qudits = [0]
     for i in range(1, L // 2 + 1):
         qudits.append(i)
-        x = xi(L, 0, i)
-        y = entropy(state, D, qudits)
-        result.append((x, y))
-    return np.array(result) # L // 2 x 2
+        result.append(entropy(state, D, qudits))
+    return np.array(result)
 
 run = 0
-accumulator = np.zeros((L // 2, 2))
+accumulator = np.zeros((2, L // 2))
+
+start_time = time.time()
 
 while time.time() - start_time < TIMELIMIT and run < MAXRUNS:
     with Pool(num_cpus) as pool:
@@ -78,8 +77,8 @@ while time.time() - start_time < TIMELIMIT and run < MAXRUNS:
     run += 1
 accumulator /= run
 
-mean = accumulator[:, 0]
-std = np.sqrt(accumulator[:, 1] - mean**2) / np.sqrt(run * shots * timesteps)
+mean = accumulator[0, :]
+std = np.sqrt(accumulator[1, :] - mean**2) / np.sqrt(run * shots * timesteps)
 
 result = np.stack((mean, std))
 
