@@ -1,0 +1,3 @@
+Using 8 CPUs.
+Sampling information for L = 256, D = 4, p = 0.457:
+slurmstepd: error: *** JOB 28170099 ON sh03-15n23 CANCELLED AT 2023-08-21T14:11:33 DUE TO TIME LIMIT ***

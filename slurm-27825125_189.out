@@ -1,0 +1,4 @@
+Using 8 CPUs.
+Sampling information for L = 512, D = 3, p = 0.414:
+slurmstepd: error: *** JOB 28151877 ON sh02-06n17 CANCELLED AT 2023-08-21T09:03:26 DUE TO TIME LIMIT ***
+slurmstepd: error: Detected 29 oom_kill events in StepId=28151877.batch. Some of the step tasks have been OOM Killed.
