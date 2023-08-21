@@ -79,7 +79,7 @@ while time.time() - start_time < TIMELIMIT and run < MAXRUNS:
     mean = accumulator[0, :] / run
     std = np.sqrt(accumulator[1, :] / run - mean**2) / np.sqrt(run * shots * timesteps)
     result = np.stack((mean, std))
-    stub = "data/{}_{}_{}_{}_{}_".format(L, depth, run * shots * timesteps, p, D)
+    stub = "data/{}_{}_{}_{}_{}_".format(L, depth, shots * timesteps, p, D)
     with open(stub + "entropies_all.npy", 'wb') as filename:
         np.save(filename, result)
 
