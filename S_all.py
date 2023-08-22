@@ -2,7 +2,7 @@ import sys
 sys.path.insert(0, 'clifford')
 
 import numpy as np
-from MIPT import xi, entropy, sample
+from MIPT import entropy, sample
 import time
 import os
 from multiprocess import Pool
@@ -38,7 +38,7 @@ L = 2**(4 + t)
 depth = L // 2
 shots = 16
 timesteps = 256
-TIMELIMIT = 60 * 60 * 10 # 10 hours
+TIMELIMIT = 60 * 60 * 18 # 18 hours
 MAXRUNS = 64
 
 N = L * D
@@ -69,7 +69,11 @@ accumulator = np.zeros((2, L // 2))
 
 start_time = time.time()
 
-while time.time() - start_time < TIMELIMIT and run < MAXRUNS:
+it_time = 0
+
+time_f = True # hacky do-while loop
+
+while time_f and run < MAXRUNS:
     with Pool(num_cpus) as pool:
         results = pool.starmap(lambda: sample(f, L, p, D, timesteps, depth), [[]] * shots)
     results = np.mean(np.array(results), axis = 0)
@@ -82,6 +86,12 @@ while time.time() - start_time < TIMELIMIT and run < MAXRUNS:
     stub = "data/{}_{}_{}_{}_{}_".format(L, depth, shots * timesteps, p, D)
     with open(stub + "entropies_all.npy", 'wb') as filename:
         np.save(filename, result)
+    
+    if it_time == 0:
+        it_time = time.time() - start_time
+    
+    remain = start_time + TIMELIMIT - time.time()
+    time_f = remain > 2 * it_time
 
 end_time = time.strftime('%H:%M:%S', time.gmtime(int(time.time() - start_time)))
 print("L = {}, D = {}, p = {} done in {}, completed {} runs.".format(L, D, p, end_time, run))
